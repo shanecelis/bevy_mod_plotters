@@ -1,0 +1,12 @@
+[package]
+name = "bevy_plotters"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bevy = { version = "0.14.2", default-features = false, features = ["bevy_ui"] }
+plotters = "0.3.7"
+
+[dev-dependencies]
+bevy = { version = "0.14.2" }
+rand = "0.8.5"
