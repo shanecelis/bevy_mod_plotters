@@ -1,10 +1,11 @@
 use bevy::{
-    prelude::*,
     input::common_conditions::input_just_pressed,
-
-    render::{render_asset::RenderAssetUsages, texture::Image,
-             render_resource::{Extent3d, TextureDimension, TextureFormat}
-    }
+    prelude::*,
+    render::{
+        render_asset::RenderAssetUsages,
+        render_resource::{Extent3d, TextureDimension, TextureFormat},
+        texture::Image,
+    },
 };
 use bevy_plotters::prelude::*;
 use plotters::prelude::*;
@@ -78,8 +79,10 @@ fn setup(
         });
 }
 
-fn hello_plot<DB: DrawingBackend>(root: &DrawingArea<DB, Shift>, points: Vec<(f32, f32)>)
--> Result<(), DrawingAreaErrorKind<DB::ErrorType>> {
+fn hello_plot<DB: DrawingBackend>(
+    root: &DrawingArea<DB, Shift>,
+    points: Vec<(f32, f32)>,
+) -> Result<(), DrawingAreaErrorKind<DB::ErrorType>> {
     root.fill(&WHITE)?;
     let root = root.margin(30, 40, 30, 40);
     // After this point, we should be able to construct a chart context
@@ -105,10 +108,7 @@ fn hello_plot<DB: DrawingBackend>(root: &DrawingArea<DB, Shift>, points: Vec<(f3
         .draw()?;
 
     // And we can draw something in the drawing area
-    chart.draw_series(LineSeries::new(
-        points.clone(),
-        &RED,
-    ))?;
+    chart.draw_series(LineSeries::new(points.clone(), &RED))?;
     // Similarly, we can draw point series
     chart.draw_series(PointSeries::of_element(
         points,
@@ -136,7 +136,8 @@ fn update_image(
         if let Some(image) = images.get_mut(&material.texture) {
             let root = BitMapBackend::<BGRXPixel>::with_buffer_and_format(
                 &mut image.data,
-                (WIDTH, HEIGHT))
+                (WIDTH, HEIGHT),
+            )
             .unwrap()
             .into_drawing_area();
             let mut rng = rand::thread_rng();
