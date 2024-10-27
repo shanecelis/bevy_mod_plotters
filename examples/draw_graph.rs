@@ -12,6 +12,9 @@ use plotters::prelude::*;
 use plotters::prelude::{Circle, Text};
 use rand::Rng;
 
+const WIDTH: u32 = 500;
+const HEIGHT: u32 = 500;
+
 fn main() {
     App::new()
         .add_plugins((DefaultPlugins, PlottersPlugin))
@@ -22,9 +25,6 @@ fn main() {
         )
         .run();
 }
-
-const WIDTH: u32 = 500;
-const HEIGHT: u32 = 500;
 
 fn setup(
     mut commands: Commands,
@@ -79,6 +79,7 @@ fn setup(
         });
 }
 
+/// Adapated from plotters' README for "Our first chart" code sample.
 fn hello_plot<DB: DrawingBackend>(
     root: &DrawingArea<DB, Shift>,
     points: Vec<(f32, f32)>,

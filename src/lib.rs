@@ -6,11 +6,14 @@ use bevy::{
     reflect::TypePath,
     render::render_resource::{AsBindGroup, ShaderRef},
 };
-// use plotters::prelude::*;
 
+/// A plugin for to render BGRX images from plotters
+///
+/// Adds [PlotUiMaterial].
 #[derive(Debug)]
 pub struct PlottersPlugin;
 
+// prelude
 pub mod prelude {
     pub use super::*;
     pub use plotters::{
@@ -28,6 +31,14 @@ impl Plugin for PlottersPlugin {
     }
 }
 
+/// The PlotUiMaterial renders a texture ignoring its alpha channel, so that it
+/// will be compatible with `BGRXPixel` format that plotters uses. Instead the
+/// alpha channel is taken from the given `color` field.
+///
+/// NOTE: The plotters crate does not abstain from overwriting the 'X' byte,
+/// which for bevy is the alpha channel, so one cannot rely on setting alpha
+/// once in the texture data but must set it after every render from plotters.
+/// This material exists principally to avoid that alpha resetting operation.
 #[derive(AsBindGroup, Asset, TypePath, Debug, Clone)]
 pub struct PlotUiMaterial {
     /// Color multiplied with the image
@@ -37,6 +48,16 @@ pub struct PlotUiMaterial {
     #[texture(1)]
     #[sampler(2)]
     pub texture: Handle<Image>,
+}
+
+impl PlotUiMaterial {
+    /// Create a new PlotUiMaterial. Sets the color to white.
+    pub fn new(texture: Handle<Image>) -> Self {
+        PlotUiMaterial {
+            color: LinearRgba::WHITE,
+            texture
+        }
+    }
 }
 
 impl UiMaterial for PlotUiMaterial {
