@@ -20,6 +20,7 @@ cargo add bevy_mod_plotters
 
 ```rust,no_run
 use bevy::prelude::*;
+
 fn main() {
     App::new()
         .add_plugins(bevy_mod_plotters::PlottersPlugin)
@@ -27,78 +28,100 @@ fn main() {
 }
 ```
 
-## Create an Image
+## Create Image and Plot
 
 ``` rust,no_run
-const WIDTH: u32 = 500;
-const HEIGHT: u32 = 500;
-
-fn setup() {
+# use bevy::{
+#     prelude::*,
+#     render::{
+#         render_asset::RenderAssetUsages,
+#         render_resource::{Extent3d, TextureDimension, TextureFormat},
+#         texture::Image,
+#     },
+# };
+# use plotters::coord::Shift;
+use bevy_mod_plotters::prelude::*;
+use plotters::prelude::*;
+fn setup() -> Image {
     let mut image = Image::new_fill(
         Extent3d {
-            width: WIDTH,
-            height: HEIGHT,
+            width: 500,
+            height: 500,
             depth_or_array_layers: 1,
         },
         TextureDimension::D2,
-        &[0x00],
+        &[0x00, 0x00, 0x00, 0x00],
         TextureFormat::Bgra8UnormSrgb,
         RenderAssetUsages::MAIN_WORLD | RenderAssetUsages::RENDER_WORLD,
-    ));
+    );
     
-    
-    let root = BitMapBackend::<BGRXPixel>::with_buffer_and_format(
-        &mut image.data,
-        (WIDTH, HEIGHT),
-    )
-    .unwrap()
-    .into_drawing_area();
+    {
+        let root = try_as_backend(&mut image)
+            .unwrap()
+            .into_drawing_area();
+        plot(&root)
+            .unwrap();
+    }
+    image
 }
-```
-
-## Plot to Image Data
-
-``` rust
 
 fn plot<DB: DrawingBackend>(
     root: &DrawingArea<DB, Shift>,
 ) -> Result<(), DrawingAreaErrorKind<DB::ErrorType>> {
 
+    let mut chart = ChartBuilder::on(&root)
+        .caption("Hello, World!", ("sans-serif", 40).into_font())
+        .build_cartesian_2d(-1.0..1.0, -1.0..1.0)?;
+
+    let points = vec![(0.0, 0.0), (5.0, 5.0), (8.0, 7.0)];
+    chart.draw_series(LineSeries::new(points, &RED))?;
+    root.present()
 }
 ```
 
-## Add Material to Object
+## Add Image as Material
 
 ```rust,compile
-use bevy::{
-    prelude::*,
-    color::palettes::basic,
-    pbr::ExtendedMaterial,
-};
-use bevy_mod_plotters::*;
-
-fn setup(
+# use bevy::{
+#     prelude::*,
+#     color::palettes::basic,
+#     pbr::ExtendedMaterial,
+# };
+# use bevy_mod_plotters::*;
+fn add_image(
+    In(image): In<Image>,
     mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<PlaneCutMaterial>>) {
-
-    commands.spawn(MaterialMeshBundle {
-        mesh: meshes.add(Sphere::new(1.0)),
-        material: materials.add(ExtendedMaterial {
-            base: StandardMaterial {
-                base_color: basic::RED.into(),
+    mut images: ResMut<Assets<Image>>,
+    mut ui_materials: ResMut<Assets<PlotUiMaterial>>,
+) {
+    commands.spawn(Camera2dBundle::default());
+    commands
+        .spawn(NodeBundle {
+            style: Style {
+                width: Val::Percent(100.),
+                height: Val::Percent(100.),
+                justify_content: JustifyContent::Center,
+                ..Default::default()
+            },
+            ..Default::default()
+        })
+        .with_children(|parent| {
+            parent.spawn(MaterialNodeBundle {
+                style: Style {
+                    width: Val::Px(500.0),
+                    height: Val::Px(500.0),
+                    border: UiRect::all(Val::Px(20.0)),
+                    ..default()
+                },
+                material: ui_materials.add(PlotUiMaterial {
+                    color: LinearRgba::WHITE,
+                    texture: images.add(image),
+                }),
                 ..default()
-            },
-            extension: PlaneCutExt {
-                plane: Vec4::new(-1.0, 1.0, -2.0, 0.0),
-                color: Color::linear_rgb(0.0, 0.0, 0.7),
-                shaded: true,
-                space: Space::World,
-            },
-        }),
-        ..default()
-    });
+            });
+        });
 }
+
 ```
 
 # Examples

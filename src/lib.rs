@@ -17,7 +17,6 @@ use bevy::{
 use plotters::{
     prelude::*,
     backend::BGRXPixel,
-    coord::Shift,
 };
 
 /// A plugin to render BGRX images from plotters
