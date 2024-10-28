@@ -2,6 +2,20 @@
 name = "bevy_mod_plotters"
 version = "0.1.0"
 edition = "2021"
+description = "An plotters material for bevy"
+authors = ["Shane Celis <shane.celis@gmail.com>"]
+keywords = [
+    "plot",
+    "bevy",
+    "shader",
+    "graphics",
+]
+categories = [
+    "game-engines",
+]
+readme = "README.md"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/shanecelis/bevy_mod_plotters"
 
 [dependencies]
 bevy = { version = "0.14.2", default-features = false, features = ["bevy_ui"] }
@@ -10,3 +24,4 @@ plotters = "0.3.7"
 [dev-dependencies]
 bevy = { version = "0.14.2" }
 rand = "0.8.5"
+version-sync = "0.9.5"

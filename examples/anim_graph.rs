@@ -87,25 +87,25 @@ fn sin_plot<DB: DrawingBackend>(
     let root = root.margin(30, 40, 30, 40);
     // After this point, we should be able to construct a chart context
     let mut chart = ChartBuilder::on(&root)
-    //     // Set the caption of the chart
-    //     .caption("Hello, Sine!", ("sans-serif", 40).into_font())
-    //     // Set the size of the label region
-    //     .x_label_area_size(20)
-    //     .y_label_area_size(40)
-    //     // Finally attach a coordinate on the drawing area and make a chart context
+        // Set the caption of the chart
+        .caption("Hello, Sine!", ("sans-serif", 40).into_font())
+        // Set the size of the label region
+        .x_label_area_size(20)
+        .y_label_area_size(40)
+        // Finally attach a coordinate on the drawing area and make a chart context
         .build_cartesian_2d(X_RANGE, Y_RANGE)?;
 
-    // // Then we can draw a mesh
-    // chart
-    //     .configure_mesh()
-    //     // We can customize the maximum number of labels allowed for each axis
-    //     .x_labels(5)
-    //     .y_labels(5)
-    //     .x_label_style(("sans-serif", 16))
-    //     .y_label_style(("sans-serif", 16))
-    //     // We can also change the format of the label text
-    //     .y_label_formatter(&|x| format!("{:.2}", x))
-    //     .draw()?;
+    // Then we can draw a mesh
+    chart
+        .configure_mesh()
+        // We can customize the maximum number of labels allowed for each axis
+        .x_labels(5)
+        .y_labels(5)
+        .x_label_style(("sans-serif", 16))
+        .y_label_style(("sans-serif", 16))
+        // We can also change the format of the label text
+        .y_label_formatter(&|x| format!("{:.2}", x))
+        .draw()?;
 
     // And we can draw something in the drawing area
     chart.draw_series(LineSeries::new(

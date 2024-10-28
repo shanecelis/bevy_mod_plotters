@@ -6,6 +6,15 @@
 
 A [bevy game engine](https://bevyengine.org) material to display the [plotters](https://github.com/plotters-rs/plotters) BGRX texture format.
 
+# Motivation
+
+The BGRX texture used by plotters is like a BGRA texture, but the plotters crate
+does not does not abstain from overwriting the 'X' byte, which for BGRA is the
+alpha channel, so one cannot rely on setting alpha once in the texture data but
+must assume it was changed after any render from plotters. This crate exists
+principally to avoid that alpha resetting problem and provide convenience
+methods.
+
 # Install
 
 Install the crate.
@@ -79,7 +88,7 @@ fn plot<DB: DrawingBackend>(
 }
 ```
 
-## Add Image as Material
+## Add Image as a `PlotUiMaterial`
 
 ```rust,compile
 # use bevy::{
@@ -121,7 +130,6 @@ fn add_image(
             });
         });
 }
-
 ```
 
 # Examples
@@ -139,8 +147,8 @@ This will show a red sphere with a light rotating around it and blue plane cut.
 
 # TODO
 
-Consider adding a backend specifically for the BGRA8 formats that will not
-overwrite the alpha channel.
+Consider adding a plotters backend specifically for the BGRA8 formats that will
+not overwrite the alpha channel.
 
 # Compatibility
 
