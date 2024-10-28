@@ -1,24 +1,35 @@
+#![doc(html_root_url = "https://docs.rs/bevy_mod_plotters/0.1.0")]
+#![doc = include_str!("../README.md")]
+#![forbid(missing_docs)]
+
 use bevy::{
     app::{App, Plugin},
     asset::{embedded_asset, Asset},
     color::LinearRgba,
     prelude::*,
     reflect::TypePath,
-    render::render_resource::{AsBindGroup, ShaderRef},
+    render::{
+        render_asset::RenderAssetUsages,
+        render_resource::{AsBindGroup, ShaderRef, TextureFormat}
+    },
 };
 
-/// A plugin for to render BGRX images from plotters
+use plotters::{
+    prelude::*,
+    backend::BGRXPixel,
+    coord::Shift,
+};
+
+/// A plugin to render BGRX images from plotters
 ///
 /// Adds [PlotUiMaterial].
 #[derive(Debug)]
 pub struct PlottersPlugin;
 
-// prelude
+/// prelude
 pub mod prelude {
     pub use super::*;
     pub use plotters::{
-        // prelude::*,
-        // prelude::{Circle, Text},
         backend::BGRXPixel,
         coord::Shift,
     };
@@ -41,10 +52,11 @@ impl Plugin for PlottersPlugin {
 /// This material exists principally to avoid that alpha resetting operation.
 #[derive(AsBindGroup, Asset, TypePath, Debug, Clone)]
 pub struct PlotUiMaterial {
-    /// Color multiplied with the image
+    /// The `color` RGB is multiplied with the texture's RGB. The `color` alpha
+    /// channel is used for the alpha channel for the whole texture.
     #[uniform(0)]
     pub color: LinearRgba,
-    /// Image used to represent graph
+    /// Image used to represent the plot.
     #[texture(1)]
     #[sampler(2)]
     pub texture: Handle<Image>,
@@ -62,6 +74,23 @@ impl PlotUiMaterial {
 
 impl UiMaterial for PlotUiMaterial {
     fn fragment_shader() -> ShaderRef {
-        "embedded://bevy_plotters/plot.wgsl".into()
+        "embedded://bevy_mod_plotters/plot.wgsl".into()
+    }
+}
+
+/// Convert an image into a plotters backend if possible.
+///
+/// Will fail if the texture format is not a version of BGRA8.
+pub fn try_as_backend(image: &mut Image) -> Option<BitMapBackend::<BGRXPixel>> {
+    let desc = &image.texture_descriptor;
+    if ! image.asset_usage.contains(RenderAssetUsages::MAIN_WORLD & RenderAssetUsages::RENDER_WORLD) {
+        warn!("Expected asset usages for image to include main world and render world.");
+    }
+    if matches!(desc.format, TextureFormat::Bgra8Unorm | TextureFormat::Bgra8UnormSrgb) {
+        let width = desc.size.width;
+        let height = desc.size.height;
+        BitMapBackend::<BGRXPixel>::with_buffer_and_format(&mut image.data, (width, height)).ok()
+    } else {
+        None
     }
 }

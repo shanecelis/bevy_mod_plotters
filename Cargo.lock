@@ -759,6 +759,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "bevy_mod_plotters"
+version = "0.1.0"
+dependencies = [
+ "bevy",
+ "plotters",
+ "rand",
+]
+
+[[package]]
 name = "bevy_pbr"
 version = "0.14.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -783,15 +792,6 @@ dependencies = [
  "radsort",
  "smallvec",
  "static_assertions",
-]
-
-[[package]]
-name = "bevy_plotters"
-version = "0.1.0"
-dependencies = [
- "bevy",
- "plotters",
- "rand",
 ]
 
 [[package]]
