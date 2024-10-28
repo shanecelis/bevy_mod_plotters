@@ -150,7 +150,7 @@ This will show a red sphere with a light rotating around it and blue plane cut.
 # TODO
 
 Consider adding a plotters backend specifically for the BGRA8 formats that will
-not overwrite the alpha channel.
+not overwrite the alpha channel. A backend like that might be slightly slower for writing, but it would allow one to produce plots with a transparent background.
 
 # Compatibility
 
