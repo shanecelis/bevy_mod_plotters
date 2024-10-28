@@ -10,14 +10,11 @@ use bevy::{
     reflect::TypePath,
     render::{
         render_asset::RenderAssetUsages,
-        render_resource::{AsBindGroup, ShaderRef, TextureFormat}
+        render_resource::{AsBindGroup, ShaderRef, TextureFormat},
     },
 };
 
-use plotters::{
-    prelude::*,
-    backend::BGRXPixel,
-};
+use plotters::{backend::BGRXPixel, prelude::*};
 
 /// A plugin to render BGRX images from plotters
 ///
@@ -28,10 +25,7 @@ pub struct PlottersPlugin;
 /// prelude
 pub mod prelude {
     pub use super::*;
-    pub use plotters::{
-        backend::BGRXPixel,
-        coord::Shift,
-    };
+    pub use plotters::{backend::BGRXPixel, coord::Shift};
 }
 
 impl Plugin for PlottersPlugin {
@@ -66,7 +60,7 @@ impl PlotUiMaterial {
     pub fn new(texture: Handle<Image>) -> Self {
         PlotUiMaterial {
             color: LinearRgba::WHITE,
-            texture
+            texture,
         }
     }
 }
@@ -80,12 +74,18 @@ impl UiMaterial for PlotUiMaterial {
 /// Convert an image into a plotters backend if possible.
 ///
 /// Will fail if the texture format is not a version of BGRA8.
-pub fn try_as_backend(image: &mut Image) -> Option<BitMapBackend::<BGRXPixel>> {
+pub fn try_as_backend(image: &mut Image) -> Option<BitMapBackend<BGRXPixel>> {
     let desc = &image.texture_descriptor;
-    if ! image.asset_usage.contains(RenderAssetUsages::MAIN_WORLD & RenderAssetUsages::RENDER_WORLD) {
+    if !image
+        .asset_usage
+        .contains(RenderAssetUsages::MAIN_WORLD & RenderAssetUsages::RENDER_WORLD)
+    {
         warn!("Expected asset usages for image to include main world and render world.");
     }
-    if matches!(desc.format, TextureFormat::Bgra8Unorm | TextureFormat::Bgra8UnormSrgb) {
+    if matches!(
+        desc.format,
+        TextureFormat::Bgra8Unorm | TextureFormat::Bgra8UnormSrgb
+    ) {
         let width = desc.size.width;
         let height = desc.size.height;
         BitMapBackend::<BGRXPixel>::with_buffer_and_format(&mut image.data, (width, height)).ok()

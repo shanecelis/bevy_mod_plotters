@@ -109,9 +109,11 @@ fn sin_plot<DB: DrawingBackend>(
 
     // And we can draw something in the drawing area
     chart.draw_series(LineSeries::new(
-                (-50..=50).map(|x| x as f32 / 25.0).map(|x| (x,amp * ((x + phase) * freq).sin())),
-                &RED,
-            ))?;
+        (-50..=50)
+            .map(|x| x as f32 / 25.0)
+            .map(|x| (x, amp * ((x + phase) * freq).sin())),
+        &RED,
+    ))?;
 
     root.present()
 }

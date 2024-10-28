@@ -43,9 +43,7 @@ fn setup(
         RenderAssetUsages::MAIN_WORLD | RenderAssetUsages::RENDER_WORLD,
     );
     {
-        let root = try_as_backend(&mut image)
-            .unwrap()
-            .into_drawing_area();
+        let root = try_as_backend(&mut image).unwrap().into_drawing_area();
         let points = vec![(0.0, 0.0), (5.0, 5.0), (8.0, 7.0)];
         hello_plot(&root, points).unwrap();
     }
