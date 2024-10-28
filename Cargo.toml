@@ -2,7 +2,7 @@
 name = "bevy_mod_plotters"
 version = "0.1.0"
 edition = "2021"
-description = "An plotters material for bevy"
+description = "A plotter material for bevy"
 authors = ["Shane Celis <shane.celis@gmail.com>"]
 keywords = [
     "plot",
