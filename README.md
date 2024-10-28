@@ -6,6 +6,8 @@
 
 A [bevy game engine](https://bevyengine.org) material to display the [plotters](https://github.com/plotters-rs/plotters) BGRX texture format.
 
+![Example anim_graph of sine wave.](https://github.com/user-attachments/assets/4c953a1b-a95a-4b72-8d18-efdeab4b79b9)
+
 # Motivation
 
 The BGRX texture used by plotters is like a BGRA texture, but the plotters crate
