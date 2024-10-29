@@ -142,9 +142,9 @@ Run the "draw_graph" example like so:
 cargo run --example draw_graph
 ```
 
-This will show a red sphere with a light rotating around it and blue plane cut.
+This will show a plot of three points and a red line.
 
-* `draw_graph` - Draw a plot of lines, hit 'Space' to update.
+* `draw_graph` - Plot three points and a line; hit 'Space' to update.
 * `anim_graph` - Animate a sinusoidal wave.
 
 # TODO
